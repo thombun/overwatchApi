@@ -20,9 +20,6 @@ import java.util.stream.Collectors;
 public class ApiRestController {
 
     @Autowired
-    ExternalApiProxy externalApiProxy;
-
-    @Autowired
     BLService bLService;
 
     @GetMapping(value = "/api/heros", produces = MediaType.APPLICATION_JSON_VALUE)
