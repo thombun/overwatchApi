@@ -24,13 +24,15 @@ public class HeroDto {
 
     private Resources<Resource<AbilityDto>>  abilities;
 
-    public HeroDto(long id, String name, String realName, int health, int armour, int shield) {
+    public HeroDto(long id, String name, String realName, int health, int armour, int shield, List<AbilityDto> abilityDtos) {
         this.id = id;
         this.name = name;
         this.realName = realName;
         this.health = health;
         this.armour = armour;
         this.shield = shield;
+        List<Resource<AbilityDto>> resourceList = abilityDtos.stream().map(AbilityDto::toResource).collect(Collectors.toList());
+        this.abilities = new Resources<>(resourceList);
     }
 
     public Resource<HeroDto> toResource() {

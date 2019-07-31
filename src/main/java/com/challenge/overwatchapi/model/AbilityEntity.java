@@ -1,31 +1,34 @@
-package com.challenge.overwatchapi.external;
+package com.challenge.overwatchapi.model;
 
 import com.challenge.overwatchapi.dto.AbilityDto;
-import com.challenge.overwatchapi.model.AbilityEntity;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Ability {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
+@Entity
+public class AbilityEntity {
+
+    @Id
+    @GeneratedValue
     private long id;
     private String name;
+    @Column(length = 511) //FixMe: thanks to Junkrats ult description default length of 255 is not enough.
     private String description;
-    @JsonProperty("is_ultimate")
     private boolean isUltimate;
-    private Hero hero;
 
-    public Ability() {
+    public AbilityEntity() {
     }
 
-    public Ability(long id, String name, String description, boolean isUltimate) {
-        this.id = id;
+    public AbilityEntity(String name, String description, boolean isUltimate) {
         this.name = name;
         this.description = description;
         this.isUltimate = isUltimate;
     }
-    public AbilityEntity toEntity() {
-        return new AbilityEntity(name, description, isUltimate);
+
+    public AbilityDto toDto() {
+        return new AbilityDto(id, name, description, isUltimate);
     }
 
     public long getId() {
@@ -58,13 +61,5 @@ public class Ability {
 
     public void setUltimate(boolean ultimate) {
         isUltimate = ultimate;
-    }
-
-    public Hero getHero() {
-        return hero;
-    }
-
-    public void setHero(Hero hero) {
-        this.hero = hero;
     }
 }

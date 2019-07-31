@@ -1,29 +1,35 @@
-package com.challenge.overwatchapi.external;
+package com.challenge.overwatchapi.model;
 
+import com.challenge.overwatchapi.dto.AbilityDto;
 import com.challenge.overwatchapi.dto.HeroDto;
-import com.challenge.overwatchapi.model.AbilityEntity;
-import com.challenge.overwatchapi.model.HeroEntity;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Hero {
+@Entity
+public class HeroEntity {
 
+    @Id
+    @GeneratedValue
     private long id;
     private String name;
-    @JsonProperty("real_name")
     private String realName;
     private int health;
     private int armour;
     private int shield;
 
-    public Hero() {
+    @OneToMany
+    private List<AbilityEntity> abilities = new ArrayList<>();
+
+    public HeroEntity() {
     }
 
-    public Hero(long id, String name, String realName, int health, int armour, int shield) {
-        this.id = id;
+    public HeroEntity(String name, String realName, int health, int armour, int shield) {
         this.name = name;
         this.realName = realName;
         this.health = health;
@@ -31,8 +37,9 @@ public class Hero {
         this.shield = shield;
     }
 
-    public HeroEntity toEntity() {
-        return new HeroEntity(name, realName, health, armour, shield);
+    public HeroDto toDto() {
+        List<AbilityDto> abilityDtos = abilities.stream().map(AbilityEntity::toDto).collect(Collectors.toList());
+        return new HeroDto(id, name, realName, health, armour, shield, abilityDtos);
     }
 
     public long getId() {
@@ -81,5 +88,13 @@ public class Hero {
 
     public void setShield(int shield) {
         this.shield = shield;
+    }
+
+    public List<AbilityEntity> getAbilities() {
+        return abilities;
+    }
+
+    public void setAbilities(List<AbilityEntity> abilities) {
+        this.abilities = new ArrayList<>(abilities);
     }
 }
